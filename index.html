@@ -13,75 +13,233 @@
       padding: 0;
     }
 
-    body {
-      background: #171210;
-      color: white;
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #110d0c;
       font-family: Arial, sans-serif;
-      text-align: center;
     }
 
-    header {
-      padding: 50px 20px;
-      background: linear-gradient(
-        180deg,
-        #4d2f24 0%,
-        #8b5a43 50%,
-        #171210 100%
-      );
+    /* CONTENEDOR DE LA REVISTA */
+    .revista {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
     }
 
-    h1 {
-      font-size: 2.2rem;
-      margin-bottom: 10px;
+    .revista::-webkit-scrollbar {
+      display: none;
     }
 
-    header p {
-      opacity: 0.85;
+    /* CADA PÁGINA */
+    .pagina {
+      min-width: 100%;
+      width: 100%;
+      height: 100%;
+      flex-shrink: 0;
+      scroll-snap-align: start;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
-    .catalogo {
-      max-width: 900px;
-      margin: auto;
-      padding: 30px 15px 100px;
+    /* IMAGEN DE CADA PÁGINA */
+    .pagina img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      user-select: none;
+      -webkit-user-drag: none;
     }
 
-    .mensaje {
-      padding: 60px 20px;
-      opacity: 0.7;
-    }
-
-    .whatsapp {
+    /* FLECHAS */
+    .flecha {
       position: fixed;
-      right: 20px;
-      bottom: 20px;
-      background: #25D366;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 48px;
+      height: 48px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.55);
       color: white;
-      text-decoration: none;
-      padding: 15px 20px;
-      border-radius: 50px;
-      font-weight: bold;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      font-size: 28px;
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    .flecha:hover {
+      background: rgba(0, 0, 0, 0.8);
+    }
+
+    .anterior {
+      left: 15px;
+    }
+
+    .siguiente {
+      right: 15px;
+    }
+
+    /* CONTADOR */
+    .contador {
+      position: fixed;
+      bottom: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.6);
+      color: white;
+      padding: 7px 14px;
+      border-radius: 20px;
+      font-size: 14px;
+      z-index: 10;
+    }
+
+    /* AJUSTES PARA CELULAR */
+    @media (max-width: 600px) {
+      .flecha {
+        width: 40px;
+        height: 40px;
+        font-size: 22px;
+      }
+
+      .anterior {
+        left: 8px;
+      }
+
+      .siguiente {
+        right: 8px;
+      }
     }
   </style>
 </head>
 
 <body>
 
-  <header>
-    <h1>Patagonia Zendeco</h1>
-    <p>Catálogo y lista de precios</p>
-  </header>
+  <!-- REVISTA -->
+  <main class="revista" id="revista">
 
-  <main class="catalogo">
-    <div class="mensaje">
-      <h2>Próximamente nuestro catálogo</h2>
-      <p>Estamos preparando nuestra colección.</p>
-    </div>
+    <!-- PORTADA -->
+    <section class="pagina">
+      <img src="00.jpg.png" alt="Portada Patagonia Zendeco">
+    </section>
+
+    <!-- PÁGINA 1 -->
+    <section class="pagina">
+      <img src="01.jpg.png" alt="Página 1">
+    </section>
+
+    <!-- PÁGINA 2 -->
+    <section class="pagina">
+      <img src="02.jpg.png" alt="Página 2">
+    </section>
+
   </main>
 
-  <a class="whatsapp" href="#" aria-label="Contactar por WhatsApp">
-    WhatsApp
-  </a>
+  <!-- BOTÓN ANTERIOR -->
+  <button
+    class="flecha anterior"
+    id="anterior"
+    aria-label="Página anterior">
+    ‹
+  </button>
+
+  <!-- BOTÓN SIGUIENTE -->
+  <button
+    class="flecha siguiente"
+    id="siguiente"
+    aria-label="Página siguiente">
+    ›
+  </button>
+
+  <!-- CONTADOR -->
+  <div class="contador" id="contador">
+    1 / 3
+  </div>
+
+  <script>
+    const revista = document.getElementById("revista");
+    const paginas = document.querySelectorAll(".pagina");
+    const contador = document.getElementById("contador");
+
+    let paginaActual = 0;
+
+    /* IR A UNA PÁGINA */
+    function irAPagina(numero) {
+      paginaActual = Math.max(
+        0,
+        Math.min(numero, paginas.length - 1)
+      );
+
+      revista.scrollTo({
+        left: paginaActual * revista.clientWidth,
+        behavior: "smooth"
+      });
+
+      actualizarContador();
+    }
+
+    /* ACTUALIZAR CONTADOR */
+    function actualizarContador() {
+      contador.textContent =
+        (paginaActual + 1) + " / " + paginas.length;
+    }
+
+    /* FLECHA SIGUIENTE */
+    document
+      .getElementById("siguiente")
+      .addEventListener("click", () => {
+        irAPagina(paginaActual + 1);
+      });
+
+    /* FLECHA ANTERIOR */
+    document
+      .getElementById("anterior")
+      .addEventListener("click", () => {
+        irAPagina(paginaActual - 1);
+      });
+
+    /* FLECHAS DEL TECLADO */
+    document.addEventListener("keydown", (e) => {
+
+      if (e.key === "ArrowRight") {
+        irAPagina(paginaActual + 1);
+      }
+
+      if (e.key === "ArrowLeft") {
+        irAPagina(paginaActual - 1);
+      }
+
+    });
+
+    /* ACTUALIZAR CONTADOR AL DESLIZAR */
+    revista.addEventListener("scroll", () => {
+
+      clearTimeout(revista.scrollTimer);
+
+      revista.scrollTimer = setTimeout(() => {
+
+        paginaActual = Math.round(
+          revista.scrollLeft / revista.clientWidth
+        );
+
+        actualizarContador();
+
+      }, 100);
+
+    });
+
+    /* MANTENER LA PÁGINA AL CAMBIAR TAMAÑO */
+    window.addEventListener("resize", () => {
+      irAPagina(paginaActual);
+    });
+
+  </script>
 
 </body>
 </html>
