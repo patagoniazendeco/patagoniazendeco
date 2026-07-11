@@ -29,7 +29,7 @@
 
 <style>
 
-  <style>
+  
 
     * {
       box-sizing: border-box;
@@ -201,7 +201,46 @@
 
     }
 
-  </style>
+ /* BOTÓN FLOTANTE DE WHATSAPP */
+
+.whatsapp {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+
+  width: 52px;
+  height: 52px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #25D366;
+  color: white;
+
+  border-radius: 50%;
+  text-decoration: none;
+  font-size: 25px;
+
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.35);
+  z-index: 20;
+
+  transition: transform 0.2s ease;
+}
+
+.whatsapp:hover {
+  transform: scale(1.08);
+}
+
+@media (max-width: 600px) {
+  .whatsapp {
+    right: 12px;
+    bottom: 12px;
+    width: 48px;
+    height: 48px;
+    font-size: 23px;
+  }
+} </style>
 </head>
 
 
@@ -541,6 +580,16 @@
 
 
   </script>
+
+<a
+  class="whatsapp"
+  href="https://wa.me/5491123327811?text=Hola%2C%20vi%20el%20cat%C3%A1logo%20de%20Patagonia%20Zendeco%20y%20quer%C3%ADa%20hacer%20una%20consulta."
+  target="_blank"
+  rel="noopener noreferrer"
+  aria-label="Consultar por WhatsApp"
+>
+  💬
+</a>
 
 </body>
 </html>
